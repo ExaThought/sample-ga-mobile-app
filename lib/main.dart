@@ -254,80 +254,62 @@
 //   }
 // }
 
-import 'dart:io';
-
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_core/firebase_core.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-
-  runApp(
-    MaterialApp(
-      theme: ThemeData(useMaterial3: true),
-      home: const WebViewApp(),
-    ),
-  );
-}
-
-
 // //inapp webview -1
-class WebViewApp extends StatefulWidget {
-  const WebViewApp({Key? key}) : super(key: key);
+// import 'package:flutter/material.dart';
+// import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
-  @override
-  State<WebViewApp> createState() => _WebViewAppState();
-}
+// void main() {
+//   runApp(
+//     MaterialApp(
+//       home: WebViewApp(),
+//     ),
+//   );
+// }
 
-class _WebViewAppState extends State<WebViewApp> {
-  late final InAppWebViewController controller;
+// class WebViewApp extends StatefulWidget {
+//   const WebViewApp({Key? key}) : super(key: key);
 
-  @override
-  void initState() {
-    super.initState();
-    // controller = InAppWebViewController.fromInAppBrowser(channel, inAppBrowser, initialUserScripts)
-  }
+//   @override
+//   State<WebViewApp> createState() => _WebViewAppState();
+// }
 
-  String _addQueryParameters(String url) {
-    final uri = Uri.parse(url);
-    final existingQueryParameters = uri.queryParameters;
-    final modifiedQueryParameters = {...existingQueryParameters, 'fromMobile': '1'};
-    final modifiedUri = uri.replace(queryParameters: modifiedQueryParameters);
-    return modifiedUri.toString();
-  }
+// class _WebViewAppState extends State<WebViewApp> {
+//   late InAppWebViewController _controller;
 
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      child: Scaffold(
-        appBar: AppBar(toolbarHeight: 0),
-        body: InAppWebView(
-          initialUrlRequest: URLRequest(url: Uri.parse('http://ga-nextjs-web.s3-website.ap-south-1.amazonaws.com/')),
-          onWebViewCreated: (controller) {
-            this.controller = controller;
-          },
-          shouldOverrideUrlLoading: (controller, navigationAction) async {
-            final modifiedUrl = _addQueryParameters(navigationAction.request.url.toString());
-            final modifiedRequest = URLRequest(url: Uri.parse(modifiedUrl));
-            return NavigationActionPolicy.ALLOW;
-          },
-        ),
-      ),
-      onWillPop: () async {
-        if (await controller.canGoBack()) {
-          await controller.goBack();
-        } else {
-          return Future.value(true);
-        }
-        return Future.value(false);
-      },
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(toolbarHeight: 0),
+//       body: InAppWebView(
+//         initialUrlRequest: URLRequest(
+//           url: Uri.parse('http://ga-nextjs-web.s3-website.ap-south-1.amazonaws.com/'),
+//         ),
+//         onWebViewCreated: (controller) {
+//           _controller = controller;
+//         },
+//         onLoadStart: (controller, url) {
+//           print("hello---");
+//           final modifiedUrl = _addQueryParameters(url.toString());
+//           _controller.loadUrl(urlRequest: URLRequest(url: Uri.parse(modifiedUrl)));
+//         },
+//         shouldOverrideUrlLoading: (controller, navigationAction) async {
+//           final modifiedUrl = _addQueryParameters(navigationAction.request.url.toString());
+//           _controller.loadUrl(urlRequest: URLRequest(url: Uri.parse(modifiedUrl)));
+//           return NavigationActionPolicy.ALLOW;
+//         },
+//       ),
+//     );
+//   }
+
+//   String _addQueryParameters(String url) {
+//     final uri = Uri.parse(url);
+//     final existingQueryParameters = uri.queryParameters;
+//     final modifiedQueryParameters = {...existingQueryParameters, 'fromMobile': '1'};
+//     final modifiedUri = uri.replace(queryParameters: modifiedQueryParameters);
+//     return modifiedUri.toString();
+//   }
+// }
+
 
 
 //inapp web view -2 
@@ -402,3 +384,63 @@ class _WebViewAppState extends State<WebViewApp> {
 //     );
 //   }
 // }
+
+
+//inappwebview - 3 
+import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
+void main() {
+  runApp(
+    MaterialApp(
+      home: WebViewApp(),
+    ),
+  );
+}
+
+class WebViewApp extends StatefulWidget {
+  const WebViewApp({Key? key}) : super(key: key);
+
+  @override
+  State<WebViewApp> createState() => _WebViewAppState();
+}
+
+class _WebViewAppState extends State<WebViewApp> {
+  late InAppWebViewController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(toolbarHeight: 0),
+      body: InAppWebView(
+        initialUrlRequest: URLRequest(
+          url: Uri.parse('https://google.com/'),
+        ),
+        onWebViewCreated: (controller) {
+          print('suhas-webview');
+          _controller = controller;
+        },
+        onLoadStart: (controller, url) {
+          
+          final modifiedUrl = _addQueryParameters(url.toString());
+          print("suhas on load start---${modifiedUrl}");
+          _controller.loadUrl(urlRequest: URLRequest(url: Uri.parse(modifiedUrl)));
+        },
+        shouldOverrideUrlLoading: (controller, navigationAction) async {
+          print('suhas-webview-should override url');
+          final modifiedUrl = _addQueryParameters(navigationAction.request.url.toString());
+          _controller.loadUrl(urlRequest: URLRequest(url: Uri.parse(modifiedUrl)));
+          return NavigationActionPolicy.ALLOW;
+        },
+      ),
+    );
+  }
+
+  String _addQueryParameters(String url) {
+    final uri = Uri.parse(url);
+    final existingQueryParameters = uri.queryParameters;
+    final modifiedQueryParameters = {...existingQueryParameters, 'fromMobile': '1'};
+    final modifiedUri = uri.replace(queryParameters: modifiedQueryParameters);
+    return modifiedUri.toString();
+  }
+}
