@@ -1,95 +1,96 @@
-import 'dart:io';
+// import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-import 'src/web_view_stack.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_core/firebase_core.dart';
-// import 'firebase_options.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:webview_flutter/webview_flutter.dart';
+// import 'src/web_view_stack.dart';
+// import 'package:firebase_analytics/firebase_analytics.dart';
+// import 'package:firebase_core/firebase_core.dart';
+// // import 'firebase_options.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    
-  );
+// void main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   // await Firebase.initializeApp();
 
-  runApp(
-    MaterialApp(
-      theme: ThemeData(useMaterial3: true),
-      home: const WebViewApp(),
-    ),
-  );
-}
+//   runApp(
+//     MaterialApp(
+//       theme: ThemeData(useMaterial3: true),
+//       home: const WebViewApp(),
+//     ),
+//   );
+// }
 
-class WebViewApp extends StatefulWidget {
-  const WebViewApp({super.key});
+// class WebViewApp extends StatefulWidget {
+//   const WebViewApp({super.key});
 
-  @override
-  State<WebViewApp> createState() => _WebViewAppState();
-}
+//   @override
+//   State<WebViewApp> createState() => _WebViewAppState();
+// }
 
-class _WebViewAppState extends State<WebViewApp> {
-  late final WebViewController controller, navigationDelegate;
+// class _WebViewAppState extends State<WebViewApp> {
+//   late final WebViewController controller, navigationDelegate;
   
-  @override
-  void initState()  {
-    super.initState();
-    // FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-    // analytics.setAnalyticsCollectionEnabled(true);
-    // analytics.setDefaultEventParameters(<String, dynamic>{
-    //   'stream_id': '5159556243'
-    // });
-    // analytics.setUserProperty(name: 'app-platform', value: 'app');
-     controller = WebViewController()
-     ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(Uri.parse('https://1428-2405-201-d024-c8b5-b42f-2001-c850-2622.ngrok-free.app/'))
-      ..setNavigationDelegate(NavigationDelegate(
-        onNavigationRequest: (NavigationRequest request) {
-          final Uri uri = Uri.parse(request.url);
-          final Map<String, String> queryParameters = Map.from(uri.queryParameters);
-          queryParameters.addAll({'fromMobile': '1'});
-          final Uri modifiedUri = Uri.https(uri.authority, uri.path, queryParameters);
-          controller.loadRequest(modifiedUri);
-          return NavigationDecision.prevent;
-        },
-      )
-      );
+//   @override
+//   void initState()  {
+//     super.initState();
+//     // FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+//     // analytics.setAnalyticsCollectionEnabled(true);
+//     // analytics.setDefaultEventParameters(<String, dynamic>{
+//     //   'stream_id': '5159556243'
+//     // });
+//     // analytics.setUserProperty(name: 'app-platform', value: 'app');
+//      controller = WebViewController()
+//      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+//       ..loadRequest(Uri.parse('https://carparts.com'))
+//       ..setNavigationDelegate(NavigationDelegate(
+//         onPageStarted: (String url) {
+//           print("suhas----------");
+//           String URL = url;
+//           final Uri uri = Uri.parse(URL);
+//           final Map<String, String> queryParameters = Map.from(uri.queryParameters);
+//           queryParameters.addAll({'fromMobile': '1'});
+//           final Uri modifiedUri = Uri.https(uri.authority, uri.path, queryParameters);
+//           print(modifiedUri);
+//           controller.loadRequest(modifiedUri);
+//           // return NavigationDecision.prevent;
+//         },
+//       )
+//       );
 
-    //  controller.setNavigationDelegate(NavigationDecisionPolicyDelegate(
-    //   shouldOverrideUrlLoading: (NavigationAction action) {
-    //     Uri uri = Uri.parse(action.request.url!);
-    //     Map<String, String> queryParameters = Map.from(uri.queryParameters);
-    //     queryParameters.addAll({'fromMobile': '1'});
-    //     Uri newUri = Uri.https(uri.authority, uri.path, queryParameters);
-    //     controller.loadRequest(Uri.parse('https://carparts.com/?fromMobile=1'),);
-    //     return NavigationDecision.prevent;
-    //   },
-    // ));
-    // controller.loadUrl('https://carparts.com/');
+//     //  controller.setNavigationDelegate(NavigationDecisionPolicyDelegate(
+//     //   shouldOverrideUrlLoading: (NavigationAction action) {
+//     //     Uri uri = Uri.parse(action.request.url!);
+//     //     Map<String, String> queryParameters = Map.from(uri.queryParameters);
+//     //     queryParameters.addAll({'fromMobile': '1'});
+//     //     Uri newUri = Uri.https(uri.authority, uri.path, queryParameters);
+//     //     controller.loadRequest(Uri.parse('https://carparts.com/?fromMobile=1'),);
+//     //     return NavigationDecision.prevent;
+//     //   },
+//     // ));
+//     // controller.loadUrl('https://carparts.com/');
     
       
       
-  }
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      child: Scaffold(
-        appBar: AppBar(toolbarHeight: 0),
-        body: WebViewStack(controller: controller),
-      ),
-      onWillPop: () async {
-        if (await controller.canGoBack()) {
-          await controller.goBack();
-        } else {
-          return Future.value(true);
-        }
-        return Future.value(false);
-      },
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return WillPopScope(
+//       child: Scaffold(
+//         appBar: AppBar(toolbarHeight: 0),
+//         body: WebViewStack(controller: controller),
+//       ),
+//       onWillPop: () async {
+//         if (await controller.canGoBack()) {
+//           await controller.goBack();
+//         } else {
+//           return Future.value(true);
+//         }
+//         return Future.value(false);
+//       },
+//     );
+//   }
+// }
 
 // import 'package:flutter/material.dart';
 // import 'package:webview_flutter/webview_flutter.dart';
@@ -253,3 +254,151 @@ class _WebViewAppState extends State<WebViewApp> {
 //   }
 // }
 
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  runApp(
+    MaterialApp(
+      theme: ThemeData(useMaterial3: true),
+      home: const WebViewApp(),
+    ),
+  );
+}
+
+
+// //inapp webview -1
+class WebViewApp extends StatefulWidget {
+  const WebViewApp({Key? key}) : super(key: key);
+
+  @override
+  State<WebViewApp> createState() => _WebViewAppState();
+}
+
+class _WebViewAppState extends State<WebViewApp> {
+  late final InAppWebViewController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    // controller = InAppWebViewController.fromInAppBrowser(channel, inAppBrowser, initialUserScripts)
+  }
+
+  String _addQueryParameters(String url) {
+    final uri = Uri.parse(url);
+    final existingQueryParameters = uri.queryParameters;
+    final modifiedQueryParameters = {...existingQueryParameters, 'fromMobile': '1'};
+    final modifiedUri = uri.replace(queryParameters: modifiedQueryParameters);
+    return modifiedUri.toString();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      child: Scaffold(
+        appBar: AppBar(toolbarHeight: 0),
+        body: InAppWebView(
+          initialUrlRequest: URLRequest(url: Uri.parse('http://ga-nextjs-web.s3-website.ap-south-1.amazonaws.com/')),
+          onWebViewCreated: (controller) {
+            this.controller = controller;
+          },
+          shouldOverrideUrlLoading: (controller, navigationAction) async {
+            final modifiedUrl = _addQueryParameters(navigationAction.request.url.toString());
+            final modifiedRequest = URLRequest(url: Uri.parse(modifiedUrl));
+            return NavigationActionPolicy.ALLOW;
+          },
+        ),
+      ),
+      onWillPop: () async {
+        if (await controller.canGoBack()) {
+          await controller.goBack();
+        } else {
+          return Future.value(true);
+        }
+        return Future.value(false);
+      },
+    );
+  }
+}
+
+
+//inapp web view -2 
+// import 'dart:io';
+
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+// import 'package:firebase_analytics/firebase_analytics.dart';
+// import 'package:firebase_core/firebase_core.dart';
+
+// void main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await Firebase.initializeApp();
+
+//   runApp(
+//     MaterialApp(
+//       theme: ThemeData(useMaterial3: true),
+//       home: const WebViewApp(),
+//     ),
+//   );
+// }
+
+// class WebViewApp extends StatefulWidget {
+//   const WebViewApp({Key? key}) : super(key: key);
+
+//   @override
+//   State<WebViewApp> createState() => _WebViewAppState();
+// }
+
+// class _WebViewAppState extends State<WebViewApp> {
+//   late InAppWebViewController? controller;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//   }
+
+//   String _addQueryParameters(String url) {
+//     final uri = Uri.parse(url);
+//     final existingQueryParameters = uri.queryParameters;
+//     final modifiedQueryParameters = {...existingQueryParameters, 'fromMobile': '1'};
+//     final modifiedUri = uri.replace(queryParameters: modifiedQueryParameters);
+//     return modifiedUri.toString();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return WillPopScope(
+//       child: Scaffold(
+//         appBar: AppBar(toolbarHeight: 0),
+//         body: InAppWebView(
+//           initialUrlRequest: URLRequest(url: Uri.parse('https://carparts.com')),
+//           onWebViewCreated: (controller) {
+//             this.controller = controller;
+//           },
+//           shouldOverrideUrlLoading: (controller, request) async {
+//             final modifiedUrl = _addQueryParameters(request.url.toString());
+//             final modifiedRequest = request.copyWith(url: modifiedUrl);
+//             return modifiedRequest;
+//           },
+//         ),
+//       ),
+//       onWillPop: () async {
+//         if (controller != null && await controller!.canGoBack()) {
+//           await controller!.goBack();
+//         } else {
+//           return Future.value(true);
+//         }
+//         return Future.value(false);
+//       },
+//     );
+//   }
+// }
