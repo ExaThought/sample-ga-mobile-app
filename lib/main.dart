@@ -407,6 +407,8 @@ class WebViewApp extends StatefulWidget {
 
 class _WebViewAppState extends State<WebViewApp> {
   late InAppWebViewController _controller;
+  late String _initialUrl;
+  bool _isInitialLoad = true;
 
   @override
   Widget build(BuildContext context) {
@@ -414,23 +416,22 @@ class _WebViewAppState extends State<WebViewApp> {
       appBar: AppBar(toolbarHeight: 0),
       body: InAppWebView(
         initialUrlRequest: URLRequest(
-          url: Uri.parse('https://google.com/'),
+          url: Uri.parse('http://ga-nextjs-web.s3-website.ap-south-1.amazonaws.com/'),
         ),
         onWebViewCreated: (controller) {
           print('suhas-webview');
           _controller = controller;
         },
         onLoadStart: (controller, url) {
-          
-          final modifiedUrl = _addQueryParameters(url.toString());
-          print("suhas on load start---${modifiedUrl}");
-          _controller.loadUrl(urlRequest: URLRequest(url: Uri.parse(modifiedUrl)));
-        },
-        shouldOverrideUrlLoading: (controller, navigationAction) async {
-          print('suhas-webview-should override url');
-          final modifiedUrl = _addQueryParameters(navigationAction.request.url.toString());
-          _controller.loadUrl(urlRequest: URLRequest(url: Uri.parse(modifiedUrl)));
-          return NavigationActionPolicy.ALLOW;
+          print("suhas onLoadStart: $url");
+          if (_isInitialLoad) {
+            _initialUrl = _addQueryParameters(url.toString());
+            _isInitialLoad = false;
+          }
+          if (url.toString() != _initialUrl) {
+            final modifiedUrl = _addQueryParameters(url.toString());
+            _controller.loadUrl(urlRequest: URLRequest(url: Uri.parse(modifiedUrl)));
+          }
         },
       ),
     );
