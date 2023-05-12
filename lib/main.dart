@@ -416,23 +416,40 @@ class _WebViewAppState extends State<WebViewApp> {
       appBar: AppBar(toolbarHeight: 0),
       body: InAppWebView(
         initialUrlRequest: URLRequest(
-          url: Uri.parse('http://ga-nextjs-web.s3-website.ap-south-1.amazonaws.com/'),
+          url: Uri.parse('https://carparts.com/'),
         ),
         onWebViewCreated: (controller) {
           print('suhas-webview');
           _controller = controller;
         },
         onLoadStart: (controller, url) {
+          print("url --${url}");
+           if (_isInitialLoad) {
+            _initialUrl = _addQueryParameters(url.toString());
+            _isInitialLoad = false;
+          }
           print("suhas onLoadStart: $url");
           if (_isInitialLoad) {
             _initialUrl = _addQueryParameters(url.toString());
             _isInitialLoad = false;
           }
-          if (url.toString() != _initialUrl) {
+          print("url.toString() ${url.toString()}");
+          print("initail url ${_initialUrl}");
+          print("url.toString() != _initialUrl ${url.toString() != _initialUrl}");
+          print("!_isCustomQueryParamExists(url.toString()) ${!_isCustomQueryParamExists(url.toString())}");
+          if (url.toString() != _initialUrl && !_isCustomQueryParamExists(url.toString())) {
             final modifiedUrl = _addQueryParameters(url.toString());
+            print("suhas-modified url: $modifiedUrl");
             _controller.loadUrl(urlRequest: URLRequest(url: Uri.parse(modifiedUrl)));
           }
         },
+        shouldOverrideUrlLoading: (controller, navigationAction) async {
+          print("suhas --inside should override");
+            final modifiedUrl = _addQueryParameters(navigationAction.request.url.toString());
+            final modifiedRequest = URLRequest(url: Uri.parse(modifiedUrl));
+            controller.loadUrl(urlRequest: modifiedRequest);
+            return NavigationActionPolicy.ALLOW;
+          },
       ),
     );
   }
@@ -443,5 +460,11 @@ class _WebViewAppState extends State<WebViewApp> {
     final modifiedQueryParameters = {...existingQueryParameters, 'fromMobile': '1'};
     final modifiedUri = uri.replace(queryParameters: modifiedQueryParameters);
     return modifiedUri.toString();
+  }
+
+   bool _isCustomQueryParamExists(String url) {
+    final uri = Uri.parse(url);
+    final queryParameters = uri.queryParameters;
+    return queryParameters.containsKey('fromMobile');
   }
 }
