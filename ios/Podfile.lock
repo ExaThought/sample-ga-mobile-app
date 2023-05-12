@@ -1,0 +1,35 @@
+PODS:
+  - Flutter (1.0.0)
+  - newrelic_mobile (0.0.1):
+    - Flutter
+    - NewRelicAgent (= 7.4.3)
+  - NewRelicAgent (7.4.3)
+  - webview_flutter_wkwebview (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - newrelic_mobile (from `.symlinks/plugins/newrelic_mobile/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
+
+SPEC REPOS:
+  trunk:
+    - NewRelicAgent
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  newrelic_mobile:
+    :path: ".symlinks/plugins/newrelic_mobile/ios"
+  webview_flutter_wkwebview:
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
+
+SPEC CHECKSUMS:
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  newrelic_mobile: 3a030f660cf04251309807605bd72a87787761e7
+  NewRelicAgent: 368663f164e1d27f58f11a99e96eabd4aa2e6ccd
+  webview_flutter_wkwebview: 2e2d318f21a5e036e2c3f26171342e95908bd60a
+
+PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
+
+COCOAPODS: 1.12.1
